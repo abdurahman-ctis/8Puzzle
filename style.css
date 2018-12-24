@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand');
+
+#welcome {
+    width: 400px;
+    margin: 80px auto;
+}
+
+#title {
+    text-align: center;
+    font-family: 'Quicksand';
+    font-size: 72px;
+    color: darkgray;
+}
+
+#info {
+    border-top: 1px darkgray solid;
+    border-bottom: 1px darkgray solid;
+}
+
+.button {
+    margin: 0 auto;
+    text-align: center;
+    padding: 5px;
+    width: 110px;
+    border: 1px darkgray solid;
+    border-radius: 5px;
+    font-family: 'Quicksand';
+    font-size: 36px;
+    color: darkgray;
+}
