@@ -1,20 +1,35 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand');
 
+* {margin: 0; padding: 0;}
+
 #welcome {
-    width: 400px;
+    width: 600px;
     margin: 80px auto;
+}
+
+div {
+    margin: 20px;
 }
 
 #title {
     text-align: center;
     font-family: 'Quicksand';
     font-size: 72px;
-    color: darkgray;
+    color: #34495e;
 }
 
 #info {
-    border-top: 1px darkgray solid;
-    border-bottom: 1px darkgray solid;
+    border-top: 1px #34495e solid;
+    border-bottom: 1px #34495e solid;
+    height: 200px;
+}
+
+#info p {
+    font-family: 'Quicksand';
+    font-size: 24px;
+    color: #34495e;
+    line-height: 60px;
+    text-align: center;
 }
 
 .button {
@@ -22,9 +37,16 @@
     text-align: center;
     padding: 5px;
     width: 110px;
-    border: 1px darkgray solid;
+    border: 1px #34495e solid;
     border-radius: 5px;
     font-family: 'Quicksand';
     font-size: 36px;
-    color: darkgray;
+    color: #34495e;
+    transition: all ease 0.5s;
+
+}
+
+.button:hover {
+    background: #34495e;
+    color: black;
 }
