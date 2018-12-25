@@ -11,6 +11,16 @@ body > div {
     margin-top: 20px;
 }
 
+#choose {
+    position: relative;
+}
+
+#game {
+    opacity: 0;
+    position: relative;
+    left: -1000px;
+}
+
 #choose > div {
     margin-top: 50px;
 }
