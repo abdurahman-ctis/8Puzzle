@@ -11,6 +11,10 @@ body > div {
     margin-top: 20px;
 }
 
+#choose {
+    position: relative;
+}
+
 #choose > div {
     margin-top: 50px;
 }
