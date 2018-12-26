@@ -13,6 +13,7 @@ $(function(){
         $(this).css("cursor", "pointer");
     });
 
+    // Button hover effect
     $(".button").hover(function(){
         $(this).css({background: "#34495e", color: "black"});
     }, function(){
@@ -42,6 +43,13 @@ $(function(){
         $("img").css('box-shadow', '0px 0px 0px');
         $(this).css('box-shadow', '0px 15px 15px #888');
         $("#choose > .button").fadeIn(500);
-    })
+    });
+
+    $("#choose > .button").click(function(){
+        $("#choose").animate({left: "-=1000px", opacity: 0}, 900, function(){
+            $(this).hide();
+            $("#game").show().animate({left: "0px", opacity: 1}, 1000);
+        });
+    });
 
 });
