@@ -9,6 +9,7 @@ $(function(){
 
 
     // Welcome screen
+    $("#welcome").css("display", "block");
     $(".button").mouseenter(function(){
         $(this).css("cursor", "pointer");
     });
@@ -49,7 +50,20 @@ $(function(){
         $("#choose").animate({left: "-=1000px", opacity: 0}, 900, function(){
             $(this).hide();
             $("#game").show().animate({left: "0px", opacity: 1}, 1000);
+            buildBoard();
         });
     });
+
+    function buildBoard(){
+        board = [];
+        for(var i = 0 ; i < 3; i++){
+            $("#game").append("<div class='piece' id='0"+i+"'style='"+"background:url(img/1.jpg) no-repeat -0px -"+(i*150)+"px'></div>")
+            $("#game").append("<div class='piece' id='1"+i+"'style='"+"background:url(img/1.jpg) no-repeat -150px -"+(i*150)+"px'></div>")
+            $("#game").append("<div class='piece' id='2"+i+"'style='"+"background:url(img/1.jpg) no-repeat -300px -"+(i*150)+"px'></div>")
+        }
+        //document.write("<div style='width:150px;height:150px;background:url(img/1.jpg) no-repeat 0px 0px'></div>")
+        console.log(board);
+    }
+
 
 });
