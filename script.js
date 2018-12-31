@@ -12,6 +12,8 @@ var image;
 
 var state = 0;
 
+var prev = "null";
+
 // init
 $(function () {
 
@@ -66,12 +68,17 @@ $(function () {
 
     // Game
 
-    $("select").change(function() {
+    $("select").change(function () {
         $("#shuffle > .button").fadeIn(500);
     });
 
+    $("#shuffle > .button").click(function () {
+        if ($("select").val() !== '0')
+            shuffle(Number($("select").val()))
+    });
+
     $("#game").hover(function () {
-        if(state === 1){
+        if (state === 1) {
             var mov = getMovables();
             $(".piece").each(function () {
                 if (!mov.includes($(this).attr("id")))
@@ -79,7 +86,7 @@ $(function () {
             });
         }
     }, function () {
-        if(state === 1)
+        if (state === 1)
             $(".piece").each(function () {
                 $(this).css("opacity", "1");
             });
@@ -106,32 +113,48 @@ $(function () {
         $(".piece:first-child").css("background", "none");
 
         $(".piece").click(function () {
-            if(state === 1){
+            if (state === 1) {
                 var id = $(this).attr('id');
-                console.log(getMovables());
                 if (getMovables().includes(id)) {
-                    var coor = [Number(id[0]), Number(id[1])];
-                    if (empty[0] - coor[0] !== 0) {
-                        $(this).animate({ left: "-="+152*(coor[0]-empty[0])+"px" }, 300);
-                    }
-                    else if (empty[1] - coor[1] !== 0) {
-                        $(this).animate({ top: "-="+152*(coor[1]-empty[1])+"px" }, 300);
-                    }
-                    var temp =  $("#"+empty.join("")).attr('id');
-                    $("#"+empty.join("")).attr('id', id);
-                    $(this).attr('id', temp);
-                    empty = coor;
-                    var mov = getMovables();
-                    $(".piece").each(function () {
-                        if (!mov.includes($(this).attr("id")))
-                            $(this).css("opacity", "0.2");
-                        else
-                            $(this).css("opacity", "1");
-                    });
+                    move(id);
                 }
             }
         });
     }
 
+    function move(id) {
+        var coor = [Number(id[0]), Number(id[1])], piece = $("#" + id);
+        prev = empty.join("");
+        if (empty[0] - coor[0] !== 0) {
+            piece.animate({ left: "-=" + 152 * (coor[0] - empty[0]) + "px" }, 300);
+        }
+        else if (empty[1] - coor[1] !== 0) {
+            piece.animate({ top: "-=" + 152 * (coor[1] - empty[1]) + "px" }, 300);
+        }
+        var temp = $("#" + empty.join("")).attr('id');
+        $("#" + empty.join("")).attr('id', id);
+        piece.attr('id', temp);
+        empty = coor;
+        var mov = getMovables();
+        $(".piece").each(function () {
+            if (!mov.includes(piece.attr("id")))
+                piece.css("opacity", "0.2");
+            else
+                piece.css("opacity", "1");
+        });
+    }
 
+    async function shuffle(val) {
+        var id;
+        for (var i = 0; i < val; i++) {
+            var mov = getMovables();
+            do {
+                id = mov[Math.floor(Math.random() * mov.length)];
+            } while (id === prev);
+            console.log(prev)
+            move(id);
+            await new Promise(done => setTimeout(() => done(), 500));
+        }
+        state = 1;
+    }
 });
