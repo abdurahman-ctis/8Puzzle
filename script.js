@@ -153,7 +153,7 @@ $(function () {
             } while (id === prev);
             console.log(prev)
             move(id);
-            await new Promise(done => setTimeout(() => done(), 500));
+            await new Promise(done => setTimeout(() => done(), val === 3?500:200));
         }
         state = 1;
     }
