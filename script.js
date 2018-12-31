@@ -10,6 +10,8 @@ var empty = [0, 0];
 
 var image;
 
+var state = 0;
+
 // init
 $(function () {
 
@@ -57,20 +59,30 @@ $(function () {
         $("#choose").animate({ left: "-=1000px", opacity: 0 }, 900, function () {
             $(this).hide();
             $("#game").show().animate({ left: "0px", opacity: 1 }, 1000);
+            $("#shuffle").show().animate({ left: "0px", opacity: 1 }, 1000);
             buildBoard();
         });
     });
 
+    // Game
+
+    $("select").change(function() {
+        $("#shuffle > .button").fadeIn(500);
+    });
+
     $("#game").hover(function () {
-        var mov = getMovables();
-        $(".piece").each(function () {
-            if (!mov.includes($(this).attr("id")))
-                $(this).css("opacity", "0.2");
-        });
+        if(state === 1){
+            var mov = getMovables();
+            $(".piece").each(function () {
+                if (!mov.includes($(this).attr("id")))
+                    $(this).css("opacity", "0.2");
+            });
+        }
     }, function () {
-        $(".piece").each(function () {
-            $(this).css("opacity", "1");
-        });
+        if(state === 1)
+            $(".piece").each(function () {
+                $(this).css("opacity", "1");
+            });
     });
 
     function getMovables() {
@@ -94,20 +106,29 @@ $(function () {
         $(".piece:first-child").css("background", "none");
 
         $(".piece").click(function () {
-            var id = $(this).attr('id');
-            console.log(getMovables());
-            if (getMovables().includes(id)) {
-                var coor = [Number(id[0]), Number(id[1])];
-                if (empty[0] - coor[0] !== 0) {
-                    $(this).animate({ left: "-="+152*(coor[0]-empty[0])+"px" }, 300);
+            if(state === 1){
+                var id = $(this).attr('id');
+                console.log(getMovables());
+                if (getMovables().includes(id)) {
+                    var coor = [Number(id[0]), Number(id[1])];
+                    if (empty[0] - coor[0] !== 0) {
+                        $(this).animate({ left: "-="+152*(coor[0]-empty[0])+"px" }, 300);
+                    }
+                    else if (empty[1] - coor[1] !== 0) {
+                        $(this).animate({ top: "-="+152*(coor[1]-empty[1])+"px" }, 300);
+                    }
+                    var temp =  $("#"+empty.join("")).attr('id');
+                    $("#"+empty.join("")).attr('id', id);
+                    $(this).attr('id', temp);
+                    empty = coor;
+                    var mov = getMovables();
+                    $(".piece").each(function () {
+                        if (!mov.includes($(this).attr("id")))
+                            $(this).css("opacity", "0.2");
+                        else
+                            $(this).css("opacity", "1");
+                    });
                 }
-                else if (empty[1] - coor[1] !== 0) {
-                    $(this).animate({ top: "-="+152*(coor[1]-empty[1])+"px" }, 300);
-                }
-                var temp =  $("#"+empty.join("")).attr('id');
-                $("#"+empty.join("")).attr('id', id);
-                $(this).attr('id', temp);
-                empty = coor;
             }
         });
     }

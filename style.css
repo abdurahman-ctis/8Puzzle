@@ -22,8 +22,24 @@ body > div {
     background: #bdc3c7;
     position: relative;
     display:flex;
+    left: -1000px;
     flex-direction:row;
     flex-wrap:wrap;
+    margin-top: 30px;
+    margin-bottom: 0;
+}
+
+#shuffle {
+    position: relative;
+    left: -1000px;
+    color: #34495e;
+    margin-top: 20px;
+    text-align: center;
+}
+
+span {
+    font-family: 'Quicksand';
+    font-size: 18px;
 }
 
 #choose > div {
@@ -55,12 +71,16 @@ body > div {
     margin: 0 auto;
     text-align: center;
     padding: 5px;
-    width: 150px;
+    width: 80px;
     border: 1px #34495e solid;
-    border-radius: 5px;
+    border-radius: 8px;
     font-family: 'Quicksand';
-    font-size: 36px;
+    font-size: 24px;
     color: #34495e;
+}
+
+#choose > .button {
+    width: 100px;
 }
 
 #select {
@@ -68,6 +88,11 @@ body > div {
     font-family: 'Quicksand';
     font-size: 48px;
     color: #34495e;
+}
+
+select {
+    margin-left: 20px;
+    margin-bottom: 20px;
 }
 
 #images {
