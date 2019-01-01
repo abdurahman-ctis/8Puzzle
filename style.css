@@ -26,20 +26,28 @@ body > div {
     flex-direction:row;
     flex-wrap:wrap;
     margin-top: 30px;
-    margin-bottom: 0;
+    margin-bottom: 20px;
 }
 
 #shuffle {
     position: relative;
     left: -1000px;
     color: #34495e;
-    margin-top: 20px;
+    text-align: center;
+    margin-top: 0;
+}
+
+#solve {
+    margin-top: 0;
+    color: #34495e;
+    font-family: 'Quicksand';
+    font-size: 0px;
     text-align: center;
 }
 
 span {
     font-family: 'Quicksand';
-    font-size: 18px;
+    font-size: 16px;
 }
 
 #choose > div {

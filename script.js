@@ -16,6 +16,8 @@ var prev = "null";
 
 var shufNum = 0, period;
 
+var mov = [];
+
 // init
 $(function () {
 
@@ -77,17 +79,20 @@ $(function () {
     $("#shuffle > .button").click(function () {
         if ($("select").val() !== '0') {
             shufNum = Number($("select").val());
-            period = shufNum === 3 ? 500 : 300;
+            period = shufNum === 3 ? 700 : 300;
+            $("#shuffle").css('display', 'none');
             shuffle();
         }
     });
 
     $("#game").hover(function () {
         if (state === 1) {
-            var mov = getMovables();
+            mov = getMovables();
             $(".piece").each(function () {
                 if (!mov.includes($(this).attr("id")))
                     $(this).css("opacity", "0.2");
+                else
+                    $(this).css("opacity", "1");
             });
         }
     }, function () {
@@ -98,14 +103,14 @@ $(function () {
     });
 
     function getMovables() {
-        var mov = [];
+        var movables = [];
         $(".piece").each(function () {
             var id = $(this).attr('id');
             var coor = [Number(id[0]), Number(id[1])];
             if (Math.abs(empty[0] - coor[0]) + Math.abs(empty[1] - coor[1]) === 1)
-                mov.push(id);
+                movables.push(id);
         });
-        return mov;
+        return movables;
     }
 
     function buildBoard() {
@@ -131,37 +136,60 @@ $(function () {
         var coor = [Number(id[0]), Number(id[1])], piece = $("#" + id);
         prev = empty.join("");
         if (empty[0] - coor[0] !== 0) {
-            piece.animate({ left: "-=" + 152 * (coor[0] - empty[0]) + "px" }, 300);
+            piece.animate({ left: "-=" + 152 * (coor[0] - empty[0]) + "px" }, 200, function () { changeOpacity(id, coor, piece) });
         }
         else if (empty[1] - coor[1] !== 0) {
-            piece.animate({ top: "-=" + 152 * (coor[1] - empty[1]) + "px" }, 300);
+            piece.animate({ top: "-=" + 152 * (coor[1] - empty[1]) + "px" }, 200, function () { changeOpacity(id, coor, piece) });
         }
+    }
+
+    function changeOpacity(id, coor, piece) {
         var temp = $("#" + empty.join("")).attr('id');
         $("#" + empty.join("")).attr('id', id);
         piece.attr('id', temp);
         empty = coor;
-        var mov = getMovables();
+        mov = getMovables();
+        if (state === 1) {
+            $(".piece").each(function () {
+                if (!mov.includes($(this).attr("id")))
+                    $(this).css("opacity", "0.2");
+                else
+                    $(this).css("opacity", "1");
+            });
+            checkForWin();
+        }
+    }
+
+    // TODO: Fix it
+    function checkForWin() {
+        var next = 0, id;
+        $("#game").each(function () {
+            id = $(this).attr('id');
+            if (next !== Number(id[0]) + Number(id[1]))
+                return
+            next++;
+        })
+        state = 0;
         $(".piece").each(function () {
-            if (!mov.includes(piece.attr("id")))
-                piece.css("opacity", "0.2");
-            else
-                piece.css("opacity", "1");
+            $(this).css("opacity", "1");
         });
+        $("#end").show();
     }
 
     function shuffle() {
         if (shufNum > 0) {
             var id;
-            var mov = getMovables();
+            mov = getMovables();
             do {
                 id = mov[Math.floor(Math.random() * mov.length)];
             } while (id === prev);
-            console.log(prev)
             move(id);
             shufNum -= 1;
-            setTimeout(function () { shuffle(shufNum) }, period);
+            setTimeout(function () { shuffle() }, period);
         } else {
             state = 1;
+            $("#solve").show();
+            $("#solve").animate({ fontSize: "+=36px" }, 500);
         }
     }
 });
