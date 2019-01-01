@@ -1,4 +1,4 @@
-// messages
+// Variables
 var messages = ["CTIS - Web Technologies 1<br/>PROJECT<br/>Fall 2018",
     "BY<br/>Abdurahman Atakishiyev<br/>21701324",
     "<br/>Can you solve it?<br/>"];
@@ -13,6 +13,8 @@ var image;
 var state = 0;
 
 var prev = "null";
+
+var shufNum = 0, period;
 
 // init
 $(function () {
@@ -73,8 +75,11 @@ $(function () {
     });
 
     $("#shuffle > .button").click(function () {
-        if ($("select").val() !== '0')
-            shuffle(Number($("select").val()))
+        if ($("select").val() !== '0') {
+            shufNum = Number($("select").val());
+            period = shufNum === 3 ? 500 : 300;
+            shuffle();
+        }
     });
 
     $("#game").hover(function () {
@@ -144,17 +149,19 @@ $(function () {
         });
     }
 
-    async function shuffle(val) {
-        var id;
-        for (var i = 0; i < val; i++) {
+    function shuffle() {
+        if (shufNum > 0) {
+            var id;
             var mov = getMovables();
             do {
                 id = mov[Math.floor(Math.random() * mov.length)];
             } while (id === prev);
             console.log(prev)
             move(id);
-            await new Promise(done => setTimeout(() => done(), val === 3?500:200));
+            shufNum -= 1;
+            setTimeout(function () { shuffle(shufNum) }, period);
+        } else {
+            state = 1;
         }
-        state = 1;
     }
 });
