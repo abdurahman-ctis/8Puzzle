@@ -3,7 +3,7 @@ var messages = ["CTIS - Web Technologies 1<br/>PROJECT<br/>Fall 2018",
     "BY<br/>Abdurahman Atakishiyev<br/>21701324",
     "<br/>Can you solve it?<br/>"];
 
-var board = mov = [];
+var board = mov = solution = [], empty = [0, 0];
 
 var init = {
     "00": 0,
@@ -16,8 +16,6 @@ var init = {
     "12": 7,
     "22": 8,
 }
-
-var empty = [0, 0];
 
 var image;
 
@@ -111,7 +109,7 @@ $(function () {
 
     function getMovables() {
         /* Returns currently movable pieces */
-        
+
         var movables = [];
         $(".piece").each(function () {
             var id = $(this).attr('id');
@@ -153,17 +151,22 @@ $(function () {
         else if (empty[1] - coor[1] !== 0) {
             piece.animate({ top: "-=" + 152 * (coor[1] - empty[1]) + "px" }, 200, function () { changeOpacity(id, coor, piece) });
         }
+
+        // If Esc is not pressed, record all moves
+        if (state !== -1)
+            solution.push(empty.join(""));
     }
 
     function changeOpacity(id, coor, piece) {
         /* Changes opacity of the pieces and swaps the ids of the moved pieces. */
 
+
         var temp = $("#" + empty.join("")).attr('id');
         $("#" + empty.join("")).attr('id', id);
         piece.attr('id', temp);
-
         empty = coor;
         mov = getMovables();
+
         if (state === 1) {
             $(".piece").each(function () {
                 if (!mov.includes($(this).attr("id")))
@@ -171,8 +174,8 @@ $(function () {
                 else
                     $(this).css("opacity", "1");
             });
-            checkForWin();
         }
+        checkForWin();
     }
 
     function checkForWin() {
@@ -183,10 +186,13 @@ $(function () {
         $("#game").children().each(function (i, item) {
             id = $(item).attr('id');
             if (next !== init[id])
-                flag = false
+                flag = false;
             next++;
         })
         if (flag) {
+            if(state === -1)
+                $("#end").text("Now on your own!");
+
             state = 0;
             $(".piece").each(function () {
                 $(this).css("opacity", "0.2");
@@ -194,9 +200,9 @@ $(function () {
             $("#solve").hide();
             $("#restart").fadeIn(1000);
             $("#end").fadeIn(200).fadeOut(200).fadeIn(200)
-                .animate({fontSize: "+=35px", bottom: "+=350px"})
-                .animate({bottom: "-=20px"}, 200)
-                .animate({bottom: "+=20px"}, 200);
+                .animate({ fontSize: "+=35px", bottom: "+=350px" })
+                .animate({ bottom: "-=20px" }, 200)
+                .animate({ bottom: "+=20px" }, 200);
         }
     }
 
@@ -218,4 +224,20 @@ $(function () {
             $("#solve").animate({ fontSize: "+=36px" }, 500);
         }
     }
+
+    /* To solve puzzle when Esc is pressed */
+
+    $(window).on('keydown', function (key) {
+        if (key.which === 27) {
+            state = -1;
+            solvePuzzle();
+        }
+    });
+
+    function solvePuzzle() {
+        move(solution.pop())
+        if (solution.length > 0)
+            setTimeout(solvePuzzle, 500);            
+    }
+
 });
