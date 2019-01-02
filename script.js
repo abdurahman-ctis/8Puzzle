@@ -2,21 +2,28 @@
 var messages = ["CTIS - Web Technologies 1<br/>PROJECT<br/>Fall 2018",
     "BY<br/>Abdurahman Atakishiyev<br/>21701324",
     "<br/>Can you solve it?<br/>"];
-var i = 1;
 
-var board = [];
+var board = mov = [];
+
+var init = {
+    "00": 0,
+    "10": 1,
+    "20": 2,
+    "01": 3,
+    "11": 4,
+    "21": 5,
+    "02": 6,
+    "12": 7,
+    "22": 8,
+}
 
 var empty = [0, 0];
 
 var image;
 
-var state = 0;
-
 var prev = "null";
 
-var shufNum = 0, period;
-
-var mov = [];
+var i = 1, state = 0, shufNum = 0, period;
 
 // init
 $(function () {
@@ -103,6 +110,8 @@ $(function () {
     });
 
     function getMovables() {
+        /* Returns currently movable pieces */
+        
         var movables = [];
         $(".piece").each(function () {
             var id = $(this).attr('id');
@@ -114,7 +123,8 @@ $(function () {
     }
 
     function buildBoard() {
-        //board = [];
+        /* Builds the game board by filling the pieces */
+
         for (var i = 0; i < 3; i++) {
             $("#game").append("<div class='piece' id='0" + i + "'style='" + "background:url(" + image + ") no-repeat -0px -" + (i * 150) + "px'></div>")
             $("#game").append("<div class='piece' id='1" + i + "'style='" + "background:url(" + image + ") no-repeat -150px -" + (i * 150) + "px'></div>")
@@ -133,6 +143,8 @@ $(function () {
     }
 
     function move(id) {
+        /* Moves the piece with the given id. */
+
         var coor = [Number(id[0]), Number(id[1])], piece = $("#" + id);
         prev = empty.join("");
         if (empty[0] - coor[0] !== 0) {
@@ -144,9 +156,12 @@ $(function () {
     }
 
     function changeOpacity(id, coor, piece) {
+        /* Changes opacity of the pieces and swaps the ids of the moved pieces. */
+
         var temp = $("#" + empty.join("")).attr('id');
         $("#" + empty.join("")).attr('id', id);
         piece.attr('id', temp);
+
         empty = coor;
         mov = getMovables();
         if (state === 1) {
@@ -160,23 +175,34 @@ $(function () {
         }
     }
 
-    // TODO: Fix it
     function checkForWin() {
-        var next = 0, id;
-        $("#game").each(function () {
-            id = $(this).attr('id');
-            if (next !== Number(id[0]) + Number(id[1]))
-                return
+        /* Checks if all pieces are aligned in increasing order, 
+            i.e if the puzze is solved. */
+
+        var next = 0, id, flag = true;
+        $("#game").children().each(function (i, item) {
+            id = $(item).attr('id');
+            if (next !== init[id])
+                flag = false
             next++;
         })
-        state = 0;
-        $(".piece").each(function () {
-            $(this).css("opacity", "1");
-        });
-        $("#end").show();
+        if (flag) {
+            state = 0;
+            $(".piece").each(function () {
+                $(this).css("opacity", "0.2");
+            });
+            $("#solve").hide();
+            $("#restart").fadeIn(1000);
+            $("#end").fadeIn(200).fadeOut(200).fadeIn(200)
+                .animate({fontSize: "+=35px", bottom: "+=350px"})
+                .animate({bottom: "-=20px"}, 200)
+                .animate({bottom: "+=20px"}, 200);
+        }
     }
 
     function shuffle() {
+        /* Shuffles the pieces by moving the randomly chosen movable piece */
+
         if (shufNum > 0) {
             var id;
             mov = getMovables();
